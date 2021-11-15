@@ -1,6 +1,7 @@
-using in_api.Models;
+﻿using in_api.Models;
 using in_api.Services;
 using in_api.ViewModels;
+using in_API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,9 +17,12 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace in_api
 {
@@ -78,18 +82,24 @@ namespace in_api
 
             services.AddScoped<IUserService, UserService>();
 
-            services.AddControllers().ConfigureApiBehaviorOptions(options => {
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            services.AddScoped<ICategoryService, CategoryService>();
+
+            services.AddScoped<IFinancialDataService, FinancialDataService>();
+
+            services.AddControllers();/*.ConfigureApiBehaviorOptions(options => {
                 //options.SuppressModelStateInvalidFilter = true;
                 options.InvalidModelStateResponseFactory = actionContext =>
                 {
                     return new BadRequestObjectResult(new Response { Success = false, Message = "ServerValidationError" });
                 };
-            });
+            });*/
             
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserContext context1, FinancialDataContext context2)
         {
             if (env.IsDevelopment())
             {
@@ -110,6 +120,15 @@ namespace in_api
             {
                 endpoints.MapControllers();
             });
+
+            var cultureInfo = new CultureInfo("pl-PL");
+            cultureInfo.NumberFormat.CurrencySymbol = "zł";
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
+            context1.Database.EnsureCreated();
+            context2.Database.EnsureCreated();
         }
     }
 }

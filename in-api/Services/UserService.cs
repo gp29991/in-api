@@ -30,7 +30,7 @@ namespace in_api.Services
                 return new Response()
                 {
                     Success = false,
-                    Message = "ServerError"
+                    Message = "NullError"
                 };
             }
             
@@ -40,7 +40,7 @@ namespace in_api.Services
                 UserName = model.Username
             };
 
-            if(await _userManager.FindByNameAsync(user.UserName) != null)
+            if(await _userManager.FindByNameAsync(user.UserName) != null || model.Username == "default")
             {
                 return new Response()
                 {
@@ -83,7 +83,7 @@ namespace in_api.Services
                 return new Response()
                 {
                     Success = false,
-                    Message = "ServerError"
+                    Message = "NullError"
                 };
             }
 

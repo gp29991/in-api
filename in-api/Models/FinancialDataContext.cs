@@ -14,5 +14,7 @@ namespace in_api.Models
         }
 
         public DbSet<FinancialData> FinancialData { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
     }
 }

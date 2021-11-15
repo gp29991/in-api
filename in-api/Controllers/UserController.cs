@@ -24,7 +24,7 @@ namespace in_api.Controllers
         }
 
         [HttpPost("register")] // api/user/register
-        public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             Response result = await _userService.RegisterUser(model);
 
@@ -37,7 +37,7 @@ namespace in_api.Controllers
         }
 
         [HttpPost("login")] // api/user/login
-        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             Response result = await _userService.LoginUser(model);
 
