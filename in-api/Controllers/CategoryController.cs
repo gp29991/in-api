@@ -81,12 +81,16 @@ namespace in_api.Controllers
 
             var dataEditingResult = _dataService.MarkDataForEditing(dataForEditing);
 
-            var result = await _categoryService.EditCategory(id, categoryToEdit);
-
-            if (!result.Success)
+            if (!dataEditingResult.Success)
             {
-                return BadRequest(result);
+                return BadRequest(new ResponseObj<Category>
+                {
+                    Success = false,
+                    Message = "FailedToeditData"
+                });
             }
+
+            var result = await _categoryService.EditCategory(id, categoryToEdit);
 
             return Ok(result);
         }
@@ -108,7 +112,11 @@ namespace in_api.Controllers
 
              if(!dataDeletionResult.Success)
              {
-                 return BadRequest(dataDeletionResult);
+                return BadRequest(new ResponseObj<Category>
+                {
+                    Success = false,
+                    Message = "FailedToDeleteData"
+                });
              }
 
              var result = await _categoryService.DeleteCategory(id);
@@ -138,12 +146,20 @@ namespace in_api.Controllers
 
             if (!dataDeletionResult.Success)
             {
-                return BadRequest(dataDeletionResult);
+                return BadRequest(new ResponseObj<Category>
+                {
+                    Success = false,
+                    Message = "FailedToDeleteData"
+                });
             }
 
-            var result = await _dataService.SaveData();
+            await _dataService.SaveData();
 
-            return Ok(result);
+            return Ok(new ResponseObj<Category>
+            {
+                Success = true,
+                Message = "Success"
+            });
         }
     }
 }

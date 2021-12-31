@@ -33,7 +33,7 @@ namespace in_api.Controllers
                 return BadRequest(result);
             }
 
-            return Ok();
+            return Ok(result);
         }
 
         [HttpPost("login")] // api/user/login
